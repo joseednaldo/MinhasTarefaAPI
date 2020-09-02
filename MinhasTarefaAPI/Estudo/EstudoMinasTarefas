@@ -1,8 +1,17 @@
-##############################
-NOVA API  MINHAS TAREFAS
-#############################
+######################################
+NOVA API  MINHAS TAREFAS com JWT
+#####################################
 
 1- criar o projeto
 -Aplicativo Web asp.net core  -> configra a pasta pra salvar
 -Escolher opção "API"     posso escolher vazia mas eu crio tudo....
 - CRIAR PASTA  modelo
+
+#################################################
+44. [ESTUDO] Criando projeto e Modelo Tarefa e
+UsuarioDTO
+################################################
+--criando classe UsuarioDTO
+
+45. [ESTUDO] Configurando o Banco de dados e
+Relacionamento
