@@ -13,5 +13,87 @@ UsuarioDTO
 ################################################
 --criando classe UsuarioDTO
 
+#############################################
 45. [ESTUDO] Configurando o Banco de dados e
 Relacionamento
+##########################################
+-criar a pasta DataBase
+-criamos o Context 
+-configuar o  servico de namco no =>arquivo setup.cs    em
+ex:
+public void ConfigureServices(IServiceCollection services)
+	{
+		services.AddControllers();
+		services.AddDbContext<MinhasTarefasContext>(op =>
+		{
+			op.UseSqlite("Data Source=Database\\MinhasTarefas.db");
+		});
+	}
+	
+-Instalar o pacote do sqlite.
+Microsoft.EntityFrameworkCore.sqlite
+
+#############################################
+46. [ESTUDO] MIGRATION E IDENTITY
+############################################
+Microsoft.EntityFrameworkCore
+Microsoft.EntityFrameworkCore.Tools
+
+comandos:
+pm> Add-MIgration bancoInicial
+pm>Update-database
+
+Abrir o banco no "LINQPad 5"  e verificar as tabelas que foram criadas... no processo de migration.
+
+#########################################################
+47. [ESTUDO]TAREFA MIGRATION DE SICRONIZAÇÃO DA API
+##########################################################
+
+Necessidade doi aplicativo:
+1-Cadastrar  usuario
+2-fazer login   ou seja acessar o sistema app
+
+Ou seja 2 opções no app :
+CADASTRAR  = AQUI VAMOS TRABALHAR COM O IDENTITY
+ENTRAR     = JWT
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+82vu4w
