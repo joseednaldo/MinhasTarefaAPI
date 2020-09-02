@@ -58,11 +58,39 @@ CADASTRAR  = AQUI VAMOS TRABALHAR COM O IDENTITY
 ENTRAR     = JWT
 
 
+OBJETIVO DA API: FAZER BKP DOS DADOS.
+#########################################################
+48. [ESTUDO]TAREFA UsuarioRepository
+##########################################################
+pacote using Microsoft.AspNetCore.Identity; 
+Usamos esse pacote pra usr o  => UserManager
+
+DICA:
+Pra validação podemos usar o recurso "DOMAIN NOTIFICATION" PADRAO USADO, EVITA DE USAR Exception.
+
+public ApplicationUser Obter(string email, string senha)
+	{
+		// Os metodos ultilizados são assicronos com o result no final tornamos ele  metodos sicronos.
+		var usuario=_userManager.FindByEmailAsync(email).Result;
+		if (_userManager.CheckPasswordAsync(usuario,senha).Result)
+		{
+			return usuario;
+		}else
+		{
+			// Pra validação podemos usar o recurso "DOMAIN NOTIFICATION
+			throw new Exception("Usuário nao localizado!");
+		}
+	}
 
 
-
-
-
+Uso do StringBuilder: para contenar textos...
+/*Pra validação podemos usar o recurso "DOMAIN NOTIFICATION*/
+	StringBuilder sb = new StringBuilder();
+	foreach (var erro in result.Errors)
+	{
+		sb.Append(erro.Description);
+	}
+	throw new Exception($"Usuário nao cadastrado! {sb.ToString()}");
 
 
 
