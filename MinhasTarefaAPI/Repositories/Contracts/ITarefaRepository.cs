@@ -15,15 +15,15 @@ namespace MinhasTarefaAPI.Repositories.Contracts
          * podemos ter na lista de tarefas uma nova tarefa, uma exclusão etc...
          * pode ser enviado em uma unica requisição.
          * */
-        void Sicronizacao(List<Tarefa> Tarefas);
+        List<Tarefa> Sicronizacao(List<Tarefa> Tarefas);
 
         /// <summary>
         /// se data nao enviar no parametro eu pego tudo do banco e faço bkp.
-        ///se tiver a data os pegamos tudo a parti dela...
+        ///se tiver a data os pegamos todos os registros a parti dessa data...
         /// </summary>
         /// <param name="dataUltimaSocronizacao"></param>
-        /// <returns></returns>
-        List<Tarefa> Restauracao(DateTime dataUltimaSocronizacao);
+        /// <returns>Lista de tarefas</returns>
+        List<Tarefa> Restauracao(ApplicationUser usuario,DateTime dataUltimaSocronizacao);
         
 
     }

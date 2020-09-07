@@ -2,25 +2,41 @@
 NOVA API  MINHAS TAREFAS com JWT
 #####################################
 
-1- criar o projeto
--Aplicativo Web asp.net core  -> configra a pasta pra salvar
--Escolher opção "API"     posso escolher vazia mas eu crio tudo....
-- CRIAR PASTA  modelo
+1- CRIAR O PROJETO
+-APLICATIVO WEB ASP.NET CORE  -> CONFIGURAR A PASTA PRA SALVAR O PROJETO
+-ESCOLHER OPÇÃO "API"     POSSO ESCOLHER VAZIA MAS EU CRIO TUDO OU POSSO CRIAR A API  TEMPLATE PADRÃO.
+-CRIAR PASTA  MODELO
+
+OBJETIVO: 
+CADATRO DE VARIAS TAREFAS  E RESTAURAÇÃODE BKP NO CELUALR DO USUARIO.
+AO FAZER O BKP VAMOS PEGAR AS TAREFAS NA NUVEM.
+VAMOS PEGAR OS DADOS NA NUVEM.
+
+O APP - FAZ O GERENCIAMENTO DOS DADOS.  PARA ATUALIZAR TRABALHO COM A API... E O BANCO NA NUVEM.
+VAMOS USAR O JWT PARA AUTENTICA O USUARIO E ACESSAR NOSSA API.
+
+
 
 #################################################
 44. [ESTUDO] Criando projeto e Modelo Tarefa e
 UsuarioDTO
 ################################################
---criando classe UsuarioDTO
+-CRIAR PASTA MODEL
+-CRIANDO CLASSE USUARIODTO
+
+
+
+
 
 #############################################
 45. [ESTUDO] Configurando o Banco de dados e
 Relacionamento
-##########################################
--criar a pasta DataBase
--criamos o Context 
--configuar o  servico de namco no =>arquivo setup.cs    em
-ex:
+##############################################
+-CRIAR A PASTA DATABASE
+-CRIAMOS O CONTEXT 
+
+-CONFIGUAR O  SERVICO DE NAMCO NO =>ARQUIVO SETUP.CS 
+EX:
 public void ConfigureServices(IServiceCollection services)
 	{
 		services.AddControllers();
@@ -30,8 +46,12 @@ public void ConfigureServices(IServiceCollection services)
 		});
 	}
 	
--Instalar o pacote do sqlite.
+-INSTALAR O PACOTE DO SQLITE.
 Microsoft.EntityFrameworkCore.sqlite
+
+
+
+
 
 #############################################
 46. [ESTUDO] MIGRATION E IDENTITY
@@ -42,6 +62,7 @@ Microsoft.EntityFrameworkCore.Tools
 comandos:
 pm> Add-MIgration bancoInicial
 pm>Update-database
+remove-migration
 
 Abrir o banco no "LINQPad 5"  e verificar as tabelas que foram criadas... no processo de migration.
 
@@ -96,6 +117,199 @@ Uso do StringBuilder: para contenar textos...
 #########################################################
 49. [ESTUDO]TAREFA TarefaRepository
 ##########################################################
+CRIANDO INTERFACE TarefaRepository
+VAMOS TER 2 METODOS
+1- REPONSAVEL PELA SICRONIZAÇÃO E A RECUPERAÇÃO DA TAREFA.
+
+-void Sicronizacao(List<Tarefa> Tarefas)
+recebe uma lista de tarefas, ou seja nessa lista posso ter
+varias ações a ser realzando ex: inclusão ,ateração ,exclusao etc.
+
+- List<Tarefa> Restauracao(DateTime dataUltimaSocronizacao);
+data do ultimo bkp, recupera os "registros" que foram cadstrados após essa data.
+ou sem data pega tudo da base...
+
+Uso do "AsQueryable", para trabalhar com filtro na consulta
+lado servidor.
+
+
+#########################################################
+50. [ESTUDO]TAREFA TarefaRepository
+##########################################################
+codigo os metodos :
+Restauracao e Sicronizacao
+
+#########################################################
+51. Criando os controlados - usuarioController
+##########################################################
+Criando a injeção de dependencia dos repositories, no 
+arquivo setup.cs.
+//registro os repositores como injecção de dependencia.
+services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+services.AddScoped<ITarefaRepository, TarefaRepository>();
+
+Criando nos Controladores:
+usuarioController com "template de API Vazio"
+
+:: FAZENDO LOGIN  ::
+
+ _signInManager.SignInAsync(usuario, false);
+  Se fosse uma aplicação web provavelmente a gente nao colocaria 
+  "false" no segundo parametro, usariamos um coockie pra manter o estado.
+ Como estamos fazendo api nao precisamos manter estado.
+
+
+#########################################################
+52. Criando os controlados - usuarioController
+##########################################################
+Cadastrando usuario.
+
+#########################################################
+53. Criando os controlador - tarefaController
+##########################################################
+
+Dica:
+Recuperamos o usuario logado...
+
+private readonly UserManager<ApplicationUser> _userManager;
+var usuario = _userManager.GetUserAsync(HttpContext.User).Result;
+
+
+#########################################################
+AULA 54/55					TESTANDO API POSTMAN / JWT
+##########################################################
+
+Criando o serviço no metodo : ConfigureServices
+// já é a configuração pra usar o dentity como serviço....
+#region  Trabalhando com autenticação de usuarios  
+services.AddDefaultIdentity<ApplicationUser>().AddEntityFrameworkStores<MinhasTarefasContext>();  
+#endregion
+
+
+Usar no metodo : Configure
+app.UseAuthentication();
+
+################################
+TESTANDO API: CADASTRAR E LOGIN
+cadastro de usuario
+#############################
+EX:cadastrnado usuario
+{
+    "nome":"jose ednaldo",
+    "email":"jose@ig.com.br",
+    "senha":"123456Ed!",
+    "confirmacaosenha":"123456Ed!"
+}
+
+resultdo final do cadastrado:
+{
+    "fullName": "jose ednaldo",
+    "tarefas": null,
+    "id": "2ec3f4d6-89c3-4d78-957e-d3cc994ed396",
+    "userName": "jose@ig.com.br",
+    "normalizedUserName": "JOSE@IG.COM.BR",
+    "email": "jose@ig.com.br",
+    "normalizedEmail": "JOSE@IG.COM.BR",
+    "emailConfirmed": false,
+    "passwordHash": "AQAAAAEAACcQAAAAEAHJHF1sfAGn7Gjle6JZCsS9cTQHABj5tss6kF/WcGKFmKcp/EJFcsC9kPmd+z13+A==",
+    "securityStamp": "5OQIGN4XWCHWHASREUTCRCZ5ONCEWC5P",
+    "concurrencyStamp": "79e64d76-0dcb-4de9-8df9-faad9b7a51dd",
+    "phoneNumber": null,
+    "phoneNumberConfirmed": false,
+    "twoFactorEnabled": false,
+    "lockoutEnd": null,
+    "lockoutEnabled": true,
+    "accessFailedCount": 0
+}
+
+
+EX: CRIAR MODELO DE TAREFA
+{
+    "idTarefaApi": 0,
+    "idTarefaApp": 0,
+    "titulo": null,
+    "dataHora": "0001-01-01T00:00:00",
+    "local": null,
+    "descricao": null,
+    "tipo": null,
+    "concluido": false,
+    "excluido": false,
+    "criado": "0001-01-01T00:00:00",
+    "atualizado": "0001-01-01T00:00:00",
+    "usuarioId": null,
+    "usuario": null
+}
+
+
+
+RESULTADO DO CADASTRO DE USUARIO.
+{
+    "fullName": "moncerra",
+    "tarefas": null,
+    "id": "32d05ede-f4f8-4668-8d48-58972bd380fa",
+    "userName": "moncerra@ig.com.br",
+    "normalizedUserName": "MONCERRA@IG.COM.BR",
+    "email": "moncerra@ig.com.br",
+    "normalizedEmail": "MONCERRA@IG.COM.BR",
+    "emailConfirmed": false,
+    "passwordHash": "AQAAAAEAACcQAAAAEPyk0ernPuLVDT2DFNjJjuDmwtBO+OPZKCG9PmerABT3BjUqH6svs/xjrzsuhaVQcw==",
+    "securityStamp": "FOPVWGEZBKYGXTXLXXTU6MNM2FZVU6ZG",
+    "concurrencyStamp": "f3104ac7-4dfc-4a9b-9a60-8ce062b5719f",
+    "phoneNumber": null,
+    "phoneNumberConfirmed": false,
+    "twoFactorEnabled": false,
+    "lockoutEnd": null,
+    "lockoutEnabled": true,
+    "accessFailedCount": 0
+}
+
+
+
+login 
+{
+    "email":"daniele@ig.com.br",
+    "senha":"123456Ed!!!"
+}
+e758ae5b-b02e-4688-aa7f-e04e1e6aecf8
+
+
+cadastro
+
+{
+    "fullName": "maria",
+    "tarefas": null,
+    "id": "ad45da59a-a513-476e-9522-a4f4368007bf",
+    "userName": "maria@ig.com.br",
+    "normalizedUserName": "MARIA@IG.COM.BR",
+    "email": "maria@ig.com.br",
+    "normalizedEmail": "MARIA@IG.COM.BR",
+    "emailConfirmed": false,
+    "passwordHash": "AQAAAAEAACcQAAAAED8eYRY5bHytvGVQ+DnZ3hPM4pGG7TZq0SJE1hNI0YKfjz6Ov/MbKUbrTnwaLEMQew==",
+    "securityStamp": "Y6IM4BPNUO6P5QA64NJTKBAUQ4TJW7BA",
+    "concurrencyStamp": "ef06e6e6-503d-4eb9-adff-7bd9c07adf9e",
+    "phoneNumber": null,
+    "phoneNumberConfirmed": false,
+    "twoFactorEnabled": false,
+    "lockoutEnd": null,
+    "lockoutEnabled": true,
+    "accessFailedCount": 0
+}
+
+
+#########################################################
+AULA 56				TESTANDO API POSTMAN / JWT
+##########################################################
+
+
+
+
+
+
+
+
+
+
+
 
 
 
