@@ -148,30 +148,45 @@ lado servidor.
 codigo os metodos :
 Restauracao e Sicronizacao
 
+
 #########################################################
-51. Criando os controlados - usuarioController
+51. CRIANDO OS CONTROLADOS - USUARIOCONTROLLER
 ##########################################################
-Criando a injeção de dependencia dos repositories, no 
-arquivo setup.cs.
+CRIANDO A INJEÇÃO DE DEPENDENCIA DOS REPOSITORIES, NO 
+ARQUIVO SETUP.CS.
+
 //registro os repositores como injecção de dependencia.
 services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 services.AddScoped<ITarefaRepository, TarefaRepository>();
 
 Criando nos Controladores:
-usuarioController com "template de API Vazio"
+usuarioController com "TEMPLATE DE API VAZIO"
 
 :: FAZENDO LOGIN  ::
 
- _signInManager.SignInAsync(usuario, false);
-  Se fosse uma aplicação web provavelmente a gente nao colocaria 
-  "false" no segundo parametro, usariamos um coockie pra manter o estado.
- Como estamos fazendo api nao precisamos manter estado.
+Usar  a injecao de dependencia:
+-private readonly SignInManager<ApplicationUser> _signInManager;
+
+_signInManager.SignInAsync(usuario, false);
+Se fosse uma aplicação web provavelmente a gente nao colocaria 
+"false" no segundo parametro, usariamos um coockie pra manter o estado.
+Como estamos fazendo api nao precisamos manter estado.
+
+
 
 
 #########################################################
-52. Criando os controlados - usuarioController
+52. CRIANDO OS CONTROLADOS - USUARIOCONTROLLER
 ##########################################################
-Cadastrando usuario.
+CADASTRANDO USUARIO.
+
+Usar  a injecao de dependencia:
+-private readonly UserManager<ApplicationUser> _userManager;
+
+
+
+
+
 
 #########################################################
 53. Criando os controlador - tarefaController

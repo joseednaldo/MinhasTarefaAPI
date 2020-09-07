@@ -22,6 +22,7 @@ namespace MinhasTarefaAPI
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        // Este método é chamado em tempo de execução. Use este método para adicionar serviços ao contêiner.
         public void ConfigureServices(IServiceCollection services)
         {
 
@@ -46,9 +47,10 @@ namespace MinhasTarefaAPI
             });
             #endregion
 
-            //registro os repositores como injecção de dependencia.
+            #region Registrando os repositorie como serviço
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<ITarefaRepository, TarefaRepository>();
+            #endregion
 
             #region  Trabalhando com autenticação de usuarios  
             services.AddDefaultIdentity<ApplicationUser>().AddEntityFrameworkStores<MinhasTarefasContext>();  // já é a configuração pra usar o dentity como serviço

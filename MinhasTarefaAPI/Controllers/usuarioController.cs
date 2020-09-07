@@ -30,15 +30,13 @@ namespace MinhasTarefaAPI.Controllers
         [HttpPost("login")]
         public ActionResult Login([FromBody]UsuarioDTO usuarioDTO)
         {
-            //removendo os campos que nao cou validar
+            //removendo os campos que não vamos validar no mommento de fazer o login.
             ModelState.Remove("ConfirmacaoSenha");
             ModelState.Remove("Nome");
             
             if (ModelState.IsValid)
             {
-
                 ApplicationUser usuario = _usuarioRepository.Obter(usuarioDTO.Email, usuarioDTO.Senha);
-
                 if (usuario != null)
                 {
                     //login no Idenity
@@ -47,18 +45,15 @@ namespace MinhasTarefaAPI.Controllers
                     // no futuro vamos retorna o token (JWT)
                     return Ok();
 
-                }
-                else
+                }else
                 {
                     return NotFound("Usuário não localizado!!!");
                 }
-            }
-            else
+            }else
             {
                 return UnprocessableEntity(ModelState);
             }
         }
-
 
         [HttpPost()]//rota padrao
         public ActionResult Cadastrar([FromBody]UsuarioDTO usuarioDTO)
@@ -69,14 +64,12 @@ namespace MinhasTarefaAPI.Controllers
                 usuario.FullName = usuarioDTO.Nome;
                 usuario.UserName = usuarioDTO.Email;
                 usuario.Email = usuarioDTO.Email;
-               
 
                 var resultado = _userManager.CreateAsync(usuario, usuarioDTO.Senha).Result;
 
-
                 if (!resultado.Succeeded)
                 {
-                    // StringBuilder sb = new StringBuilder();
+                    //StringBuilder sb = new StringBuilder();
                     List<string> erros = new List<string>();
                     foreach (var erro in resultado.Errors)
                     {
@@ -84,13 +77,12 @@ namespace MinhasTarefaAPI.Controllers
                     }
 
                     return UnprocessableEntity(erros);
-                }else
-                {
+
+                }else{
                     return Ok(usuario);
                 }
                 
-            }
-            else
+            }else
             {
                 return UnprocessableEntity(ModelState);
             }
