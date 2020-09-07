@@ -9,8 +9,8 @@ using MinhasTarefaAPI.Database;
 namespace MinhasTarefaAPI.Migrations
 {
     [DbContext(typeof(MinhasTarefasContext))]
-    [Migration("20200902020407_modelo_tarefa_Sicronizacao2")]
-    partial class modelo_tarefa_Sicronizacao2
+    [Migration("20200907180748_BANCO-INICIAL")]
+    partial class BANCOINICIAL
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -93,10 +93,12 @@ namespace MinhasTarefaAPI.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(128);
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(128);
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("TEXT");
@@ -133,10 +135,12 @@ namespace MinhasTarefaAPI.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(128);
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(128);
 
                     b.Property<string>("Value")
                         .HasColumnType("TEXT");
@@ -165,8 +169,8 @@ namespace MinhasTarefaAPI.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("FullName")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("FullName")
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("INTEGER");

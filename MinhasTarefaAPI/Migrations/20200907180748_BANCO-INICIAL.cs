@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MinhasTarefaAPI.Migrations
 {
-    public partial class bancoInicial : Migration
+    public partial class BANCOINICIAL : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -40,7 +40,7 @@ namespace MinhasTarefaAPI.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    FullName = table.Column<int>(nullable: false)
+                    FullName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -93,8 +93,8 @@ namespace MinhasTarefaAPI.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(nullable: false),
-                    ProviderKey = table.Column<string>(nullable: false),
+                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
+                    ProviderKey = table.Column<string>(maxLength: 128, nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false)
                 },
@@ -138,8 +138,8 @@ namespace MinhasTarefaAPI.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
+                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
+                    Name = table.Column<string>(maxLength: 128, nullable: false),
                     Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -157,21 +157,23 @@ namespace MinhasTarefaAPI.Migrations
                 name: "Tarefas",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    IdTarefaApi = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    IdTarefaApp = table.Column<int>(nullable: false),
                     Titulo = table.Column<string>(nullable: true),
                     DataHora = table.Column<DateTime>(nullable: false),
                     Local = table.Column<string>(nullable: true),
                     Descricao = table.Column<string>(nullable: true),
                     Tipo = table.Column<string>(nullable: true),
                     Concluido = table.Column<bool>(nullable: false),
+                    Excluido = table.Column<bool>(nullable: false),
                     Criado = table.Column<DateTime>(nullable: false),
                     Atualizado = table.Column<DateTime>(nullable: false),
                     UsuarioId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tarefas", x => x.Id);
+                    table.PrimaryKey("PK_Tarefas", x => x.IdTarefaApi);
                     table.ForeignKey(
                         name: "FK_Tarefas_AspNetUsers_UsuarioId",
                         column: x => x.UsuarioId,

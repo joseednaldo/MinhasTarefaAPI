@@ -17,15 +17,15 @@ namespace MinhasTarefaAPI.Models
         ///
 
         [Key]
-        public int IdTarefaApi { get; set; }
-        public int IdTarefaApp { get; set; }
+        public int IdTarefaApi { get; set; }  //ID DA TAREFA NO API (ID GERAL)
+        public int IdTarefaApp { get; set; }  // ID DA TAREFA DO APP  (ID DA TAREFA DO USAURIO DO APP)
         public string Titulo { get; set; }
         public DateTime DataHora { get; set; }
         public string Local { get; set; }
         public string Descricao { get; set; }
         public string Tipo { get; set; }// TRABALHO,ESTUDO...
         public bool Concluido { get; set; }
-        public bool Excluido { get; set; }
+        public bool Excluido { get; set; }   // EXCLUSÃO LÓGICA
         public DateTime Criado { get; set; }
         public DateTime Atualizado { get; set; }
 

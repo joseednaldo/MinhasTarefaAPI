@@ -37,11 +37,14 @@ namespace MinhasTarefaAPI
 
             #endregion
 
+
+            #region Criando injeção com o banco de dados  / usando o Sqlite
             services.AddControllers();
             services.AddDbContext<MinhasTarefasContext>(op =>
             {
                 op.UseSqlite("Data Source=Database\\MinhasTarefas.db");
             });
+            #endregion
 
             //registro os repositores como injecção de dependencia.
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
