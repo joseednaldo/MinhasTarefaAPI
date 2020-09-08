@@ -189,8 +189,11 @@ Usar  a injecao de dependencia:
 
 
 #########################################################
-53. Criando os controlador - tarefaController
+53. CRIANDO OS CONTROLADOR - TAREFACONTROLLER
 ##########################################################
+TEMOS  2 METODOS:
+Sincronizar E Restaurar
+
 
 Dica:
 Recuperamos o usuario logado...
@@ -199,8 +202,12 @@ private readonly UserManager<ApplicationUser> _userManager;
 var usuario = _userManager.GetUserAsync(HttpContext.User).Result;
 
 
+
+
+
 #########################################################
 AULA 54/55					TESTANDO API POSTMAN / JWT
+CADASTRO DE LOGIN
 ##########################################################
 
 Criando o serviço no metodo : ConfigureServices
@@ -263,7 +270,22 @@ EX: CRIAR MODELO DE TAREFA
     "usuarioId": null,
     "usuario": null
 }
-
+EX: CRIAR MODELO DE TAREFA
+[{
+    "idTarefaApi": 0,
+    "idTarefaApp": 2,
+    "titulo": "TAREFA 1",
+    "dataHora": "2019-01-09T00:00:00",
+    "local": "Ginasio - df",
+    "descricao": "evento-show",
+    "tipo": "Casa",
+    "concluido": false,
+    "excluido": false,
+    "criado": "2019-01-09T00:00:00",
+    "atualizado": "2019-01-09T00:00:00",
+    "usuarioId": "01e27c57-da4e-4460-862d-0dbb2d382d95",
+    "usuario": null
+}]
 
 
 RESULTADO DO CADASTRO DE USUARIO.
@@ -318,11 +340,158 @@ cadastro
     "lockoutEnabled": true,
     "accessFailedCount": 0
 }
+#########################################################
+AULA 56		TESTANDO API		- SICRONIZAR E RESTAURAR
+##########################################################
+
+TESTES OK. GERAL
+
 
 
 #########################################################
-AULA 56				TESTANDO API POSTMAN / JWT
-##########################################################
+AULA 57		   REDIRECIONANDO LOGIN
+#########################################################
+
+Já é a configuração pra usar o dentity como serviço
+AddDefaultIdentity  = CHAMA O UI, nossa api não precisa disso, serve pra trazer as telas de interface graficas.
+pra resolver isso retiramos o Default. Evita chamar de tela de login...
+
+
+//services.AddDefaultIdentity<ApplicationUser>().AddEntityFrameworkStores<MinhasTarefasContext>(); 
+services.AddIdentity<ApplicationUser,IdentityRole>().AddEntityFrameworkStores<MinhasTarefasContext>();
+
+
+:: Configurando o serviço para quando o usuário nao tiver logado, vamos tratar a mensagem 401 no arquivo setup.cs ::
+services.ConfigureApplicationCookie(options=>{
+	options.Events.OnRedirectToLogin = context => { 
+		context.Response.StatusCode = 401;
+		return Task.CompletedTask;
+	};
+});
+
+
+
+#########################################################
+AULA 58		 JSON WEB TOKEN  - JWT
+#########################################################
+
+PRA QUE USAR "TOKEN" EM UMA API.
+OBS: AS APIS SÃO STATELESS OU SEJA NAO TEM ESTADO, NÃO USA COOKIES /SESSION.
+APIS SÃO STATELESS, O "TOKEN" SERVE PARA RECONHECER O USUÁRIO E SUAS CARACTERISTICAS  (PERMISSÕES)
+
+DICAS:
+EM UM SISTEMA TRADICINAL NOS GUARDAMOS O "ESTADO"  OU SEJA OS DADOS DO USUARIO QUE LOGOU 
+NO SISTEMA.
+MAS EM APIS NAO FAEZEMOS ISSO.
+
+####
+SENDO ASSIM NOSSAS APIS PRECISA IDENTIFICAR O USUARIO COM ALGUM IDENTIFICADOR, AO QUE 
+ENTRA OS TOKEN.
+####
+O TOKEN É A IDENTIFICAÇÃO DO USUARO PRA USAR A API.
+A VISÃO É TODA VEZ QUE É FEITO UM LOGIN , DAMOS O USUARIO UM TOKEN
+PRA QUELE POSSA SER IDENTIFICADO NA API PRA FAZER AS REQUISIÇÕES.
+
+###########
+JWT É PADRÃO JA UTILIZADO NA WEB.
+##########
+BASEADO EM JSON.
+US O HASH
+LEVE: PORQUE USA JSON.
+SEGURO: PORQUE USA  HASH PARA VALIDAR A INTEGRIDADE DO TOKEN
+AUTOCONTIDA: POSSUI TODAS AS INFORMAÇÕES NECESSAÁRIAS PARA SE PROCESSAMENTO.
+
+
+JWT TEM 3 GRUPOS:
+
+1- CABEÇALHO (HEADER)  - > {"ALG":"HS256"
+							"TYP": "JWT"}
+É O TIPO DE ALGORITIMO ULTILIZADO
+
+2-CARGA UTIL (PAYLOAD)    = OS DADOS QUE SERÃO CRIPTOGRAFADO.  EX: USARIO, NOME , PERMISSAO, CPF ETC....
+3-ASSINATURA (SIGNATURE)  = VAI VALDIAR A INTEGRIDADE  
+
+
+DICAS:
+EXISTE VARIOS TIPOS NO JWT PARA UTILIZADO.
+
+
+#########################################################
+AULA 59/60		GERANDO O JWT
+#########################################################
+::FERRAMENTAS DE INSTALAÇÃO / PACKAGE 
+
+Install-Package
+System.IdentityModel.Tokens.Jwt
+
+
+site do jtw = https://jwt.io/
+
+:: PRINCIPAIS CARACTERISTICAS ::
+Sign   		=
+Verify		=
+iss check	= REPRESENTA QUEM É QUE ESTA EMITINDO O COKIE , NESSE CASO É O DOMINIO DO MEU SITE.  "QUEM ESTA EMITINDO"
+sub check	= IDENTIFICA O USUARIO
+aud check	= REPRESENTA PRA QUEM ESTOU EMITINDO ESSE TOKEN. "PRA QUEM ESTOU EMITINDO"
+exp check	= DATA DE EXPIRAÇÃO DO TOKEN
+nbf check	= DATA PRA COMEÇAR A VALIDADE DO TOKEN
+iat check	= DATA DE CRIAÇÃO DO TOKEN
+jti check	= CODIGO UNICO PRA IDENTIFICAR O TOKNE, NOS PODEMOS CRIAR ELE.
+
+estou na aula 59 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

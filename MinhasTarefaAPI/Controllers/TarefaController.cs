@@ -28,6 +28,7 @@ namespace MinhasTarefaAPI.Controllers
         [HttpPost("sincronizar")]
         public ActionResult Sincronizar([FromBody]List<Tarefa> tarefas)
         {
+            /* Retorna todas as tarefas cadastrada , vamos gravar no app mobile*/          
             return Ok(_tarefaRepository.Sicronizacao(tarefas));
         }
 
@@ -35,7 +36,7 @@ namespace MinhasTarefaAPI.Controllers
         [HttpGet("restaurar")]
         public ActionResult Restaurar(DateTime data)
         {
-            //recuperar o usuario logado no app.
+            //Recuperar o usuario logado no app.
             var usuario = _userManager.GetUserAsync(HttpContext.User).Result;
 
             return Ok(_tarefaRepository.Restauracao(usuario, data));

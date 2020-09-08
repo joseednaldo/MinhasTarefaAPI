@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +11,7 @@ using MinhasTarefaAPI.Models;
 using MinhasTarefaAPI.Repositories;
 using MinhasTarefaAPI.Repositories.Contracts;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace MinhasTarefaAPI
 {
@@ -53,7 +55,20 @@ namespace MinhasTarefaAPI
             #endregion
 
             #region  Trabalhando com autenticação de usuarios  
-            services.AddDefaultIdentity<ApplicationUser>().AddEntityFrameworkStores<MinhasTarefasContext>();  // já é a configuração pra usar o dentity como serviço
+            /*Já é a configuração pra usar o dentity como serviço
+             AddDefaultIdentity  = CHAMA O UI, nossa api não precisa disso, serve pra trazer as telas de interface graficas.
+             pra resolver isso retiramos o Default. Evita chamar de tela de login...
+            */
+            //services.AddDefaultIdentity<ApplicationUser>().AddEntityFrameworkStores<MinhasTarefasContext>(); 
+            services.AddIdentity<ApplicationUser,IdentityRole>().AddEntityFrameworkStores<MinhasTarefasContext>();
+
+            /*Configurando o serviço para quando o usuário nao tiver logado, vamos tratar a mensagem 404*/
+            services.ConfigureApplicationCookie(options=>{
+                options.Events.OnRedirectToLogin = context => { 
+                    context.Response.StatusCode = 401;
+                    return Task.CompletedTask;
+                };
+            });
             #endregion
 
         }
@@ -66,7 +81,6 @@ namespace MinhasTarefaAPI
                 app.UseDeveloperExceptionPage();
             }
 
-         
             app.UseStatusCodePages();
             app.UseAuthentication();
             app.UseRouting();
