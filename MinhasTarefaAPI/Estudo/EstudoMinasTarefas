@@ -408,7 +408,7 @@ JWT TEM 3 GRUPOS:
 							"TYP": "JWT"}
 É O TIPO DE ALGORITIMO ULTILIZADO
 
-2-CARGA UTIL (PAYLOAD)    = OS DADOS QUE SERÃO CRIPTOGRAFADO.  EX: USARIO, NOME , PERMISSAO, CPF ETC....
+2-CARGA UTIL (PAYLOAD)    = OS DADOS QUE SERÃO CRIPTOGRAFADO.  EX: USUARIO, NOME , PERMISSAO, CPF ETC....
 3-ASSINATURA (SIGNATURE)  = VAI VALDIAR A INTEGRIDADE  
 
 
@@ -417,30 +417,74 @@ EXISTE VARIOS TIPOS NO JWT PARA UTILIZADO.
 
 
 #########################################################
-AULA 59/60		GERANDO O JWT
+AULA 59/60		GERANDO O JWT   PARTE 1 E 2
 #########################################################
 ::FERRAMENTAS DE INSTALAÇÃO / PACKAGE 
 
 Install-Package
 System.IdentityModel.Tokens.Jwt
 
-
 site do jtw = https://jwt.io/
 
 :: PRINCIPAIS CARACTERISTICAS ::
 Sign   		=
 Verify		=
-iss check	= REPRESENTA QUEM É QUE ESTA EMITINDO O COKIE , NESSE CASO É O DOMINIO DO MEU SITE.  "QUEM ESTA EMITINDO"
+*iss check	= REPRESENTA QUEM É QUE ESTA EMITINDO O COOKIES , NESSE CASO É O DOMINIO DO MEU SITE.  "QUEM ESTA EMITINDO"
 sub check	= IDENTIFICA O USUARIO
-aud check	= REPRESENTA PRA QUEM ESTOU EMITINDO ESSE TOKEN. "PRA QUEM ESTOU EMITINDO"
+*aud check	= REPRESENTA PRA QUEM ESTOU EMITINDO ESSE TOKEN. "PRA QUEM ESTOU EMITINDO"
 exp check	= DATA DE EXPIRAÇÃO DO TOKEN
 nbf check	= DATA PRA COMEÇAR A VALIDADE DO TOKEN
 iat check	= DATA DE CRIAÇÃO DO TOKEN
-jti check	= CODIGO UNICO PRA IDENTIFICAR O TOKNE, NOS PODEMOS CRIAR ELE.
+jti check	= CODIGO UNICO PRA IDENTIFICAR O TOKEN, NOS PODEMOS CRIAR ELE.
 
-estou na aula 59 
+#########################################################
+AULA 61		GERANDO O JWT  PARTE 3
+#########################################################
+
+ALTERAÇÃO NO ARQUIVO SETUP.CS
 
 
+O TokenValidationParameters trabalha em conjunto com [Authorize].
+options.TokenValidationParameters = new TokenValidationParameters()
+{
+	//aqui indicamos o que será validado.
+};
+
+//Verifica o esquema de autenticação,verifica o usuario e 
+services.AddAuthorizationCore
+
+
+/*Configurando o serviço para quando o usuário nao tiver logado, vamos tratar a mensagem 404*/
+services.ConfigureApplicationCookie(options=>{
+
+
+
+#########################################################
+AULA 62		REMOVENDO O COOKIE AO LOGAR  PARTE 4
+#########################################################
+
+-O LOGIN USA O IDENTITY QUE QUARDO UM COOKIE,
+ELE NÃO É MAIS NECESSARIO.
+
+
+--NÃO É MAIS NECESSARIO.
+ELE UTILIZA O COOKIEBUIDER PRA GUARDA OS DADOS DO USUARIO LOGADO.
+VAMOS USAR AGORA O JTW QUE NAO GAURDA ESTADO.
+
+//_signInManager.SignInAsync(usuario, false);    
+
+
+
+
+#########################################################
+AULA 63		RENOVANDO JWT  PARTE 5
+#########################################################
+
+1-Reflesh token.
+fazer uam renovação mais rapida.
+vamos ter uma tabela para gravar os tokens anterior.
+
+2-fazer que o próprio aplication faça o login novamente.
 
 
 

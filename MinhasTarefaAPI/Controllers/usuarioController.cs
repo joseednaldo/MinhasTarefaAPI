@@ -44,11 +44,18 @@ namespace MinhasTarefaAPI.Controllers
                 ApplicationUser usuario = _usuarioRepository.Obter(usuarioDTO.Email, usuarioDTO.Senha);
                 if (usuario != null)
                 {
-                    //login no Idenity
-                    _signInManager.SignInAsync(usuario, false);
+                    #region  Login usando Idenity
 
-                    //no futuro vamos retorna o token (JWT)
+                    /* não é mais necessario.
+                     ele utiliza o CookieBuider pra guarda os dados do usuario logado.
+                     vamos usar agora o jtw que nao gaurda estado.
+                    */
+                    //_signInManager.SignInAsync(usuario, false);    
 
+                    #endregion
+
+
+                    //Trabalhando com  token (JWT)
                     return Ok(BuildToken(usuario));
 
                 }else
@@ -65,20 +72,20 @@ namespace MinhasTarefaAPI.Controllers
         {
             var claims = new[]
             {
-               new Claim(JwtRegisteredClaimNames.Email,usuario.Email)
-           };
+               new Claim(JwtRegisteredClaimNames.Email,usuario.Email),
+               new Claim(JwtRegisteredClaimNames.Sub,usuario.Id)   //propriedade "Sub" serve para idenfificar o usuario.
+            };
 
             #region  Cria chave
 
-            /*O ideal é criar a chave(texto) no appsettings.js*/
-            var key  = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("chave-api-jwt-minhas-tarefas"));
-            var sign = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);   // criando assinatura
-            var exp = DateTime.UtcNow.AddHours(1);
+            var key  = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("chave-api-jwt-minhas-tarefas")); //O ideal é criar a chave(texto) no appsettings.js
+            var sign = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);                       // criando assinatura
+            var exp = DateTime.UtcNow.AddHours(1);  // UtcNow NAO FICO REFEM DO FUSO HORARIO   // validade de uma hora.
 
-            //Classe que gera o token
+            /*Classe que gera o token.*/
             JwtSecurityToken token = new JwtSecurityToken(
-                 issuer : null,  // nao quero dizer quem esta emitindo o token
-                 audience: null, // não importa quem vai consumir o token
+                 issuer : null,  // Não quero dizer quem esta emitindo o token    TRADUTOR: issuer => EMISSOR/EMISSORA/EMITENTENTE
+                 audience: null, // Não importa quem vai consumir o token    - Pra quem é esse token, quem vai consumir esse token... ex: qual dominio.
                  claims: claims, 
                  expires:exp,
                  signingCredentials: sign
@@ -86,7 +93,7 @@ namespace MinhasTarefaAPI.Controllers
                 );
 
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-            return new { token = tokenString, expiracation = exp };
+            return new { token = tokenString, expiracation = exp, refleshtoken="", expiracationRefleshToken= exp };
             #endregion
         }
 

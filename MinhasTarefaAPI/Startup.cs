@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -6,11 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using MinhasTarefaAPI.Database;
 using MinhasTarefaAPI.Models;
 using MinhasTarefaAPI.Repositories;
 using MinhasTarefaAPI.Repositories.Contracts;
 using Newtonsoft.Json;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace MinhasTarefaAPI
@@ -60,10 +64,50 @@ namespace MinhasTarefaAPI
              pra resolver isso retiramos o Default. Evita chamar de tela de login...
             */
             //services.AddDefaultIdentity<ApplicationUser>().AddEntityFrameworkStores<MinhasTarefasContext>(); 
-            services.AddIdentity<ApplicationUser,IdentityRole>().AddEntityFrameworkStores<MinhasTarefasContext>();
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<MinhasTarefasContext>()
+                .AddDefaultTokenProviders();   //habilitanto o uso do Token.
 
-            /*Configurando o serviço para quando o usuário nao tiver logado, vamos tratar a mensagem 404*/
-            services.ConfigureApplicationCookie(options=>{
+            #region
+            services.AddAuthentication(options =>{
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme= JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options => {
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    //aqui indicamos o que será validado ou seja quais parametros vamos verificar pra validar o token.
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,       //data de  expires:exp,
+                    ValidateIssuerSigningKey=true,  //validando a chave do emissor
+                    //como é a chave do e emissor
+                    IssuerSigningKey=  new SymmetricSecurityKey(Encoding.UTF8.GetBytes("chave-api-jwt-minhas-tarefas")) //O ideal é criar a chave(texto) no appsettings.js
+
+                };
+            });
+
+
+            #region
+            
+            //Verifica o esquema de autenticação,verifica o usuario e 
+            services.AddAuthorizationCore(auto =>
+            {
+
+                auto.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+                        .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                        .RequireAuthenticatedUser()
+                        .Build()
+                    );
+
+            });
+            #endregion
+
+            #endregion
+
+
+                /*Configurando o serviço para quando o usuário nao tiver logado, vamos tratar a mensagem 404*/
+                services.ConfigureApplicationCookie(options=>{
                 options.Events.OnRedirectToLogin = context => { 
                     context.Response.StatusCode = 401;
                     return Task.CompletedTask;
