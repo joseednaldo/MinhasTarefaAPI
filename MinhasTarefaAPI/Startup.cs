@@ -56,6 +56,7 @@ namespace MinhasTarefaAPI
             #region Registrando os repositorie como serviço
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<ITarefaRepository, TarefaRepository>();
+            services.AddScoped<ITokenRepositorie, TokenRepositorie>();
             #endregion
 
             #region  Trabalhando com autenticação de usuarios  

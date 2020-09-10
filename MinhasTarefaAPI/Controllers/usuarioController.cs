@@ -21,15 +21,17 @@ namespace MinhasTarefaAPI.Controllers
     [ApiController]
     public class usuarioController : ControllerBase
     {
+        private readonly ITokenRepositorie _tokenRepositorie;
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public usuarioController(IUsuarioRepository usuarioRepository, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager )
+        public usuarioController(IUsuarioRepository usuarioRepository, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager , ITokenRepositorie tokenRepositorie)
         {
             _usuarioRepository = usuarioRepository;
             _signInManager = signInManager;
             _userManager = userManager;
+            _tokenRepositorie = tokenRepositorie;
         }
         
         [HttpPost("login")]
@@ -56,7 +58,23 @@ namespace MinhasTarefaAPI.Controllers
 
 
                     //Trabalhando com  token (JWT)
-                    return Ok(BuildToken(usuario));
+                    var token = BuildToken(usuario);
+
+                    //salvar o token no banco
+                    var tokenModel = new Token()
+                    {
+
+
+                        RefleshToken = token.RefleshToken,
+                        ExpirationToken = token.Expiration,
+                        ExpirationRefleshToken = token.ExpirationRefleshToken,
+                        Usuario =usuario,
+                        Criado=DateTime.Now,
+                        Utilizado=false
+                    };
+                    _tokenRepositorie.Cadastrar(tokenModel);
+
+                    return Ok(token);
 
                 }else
                 {
@@ -68,7 +86,7 @@ namespace MinhasTarefaAPI.Controllers
             }
         }
 
-        private object BuildToken(ApplicationUser usuario)
+        private tokenDTO BuildToken(ApplicationUser usuario)
         {
             var claims = new[]
             {
@@ -93,7 +111,20 @@ namespace MinhasTarefaAPI.Controllers
                 );
 
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-            return new { token = tokenString, expiracation = exp, refleshtoken="", expiracationRefleshToken= exp };
+
+           var refleshToken =  Guid.NewGuid().ToString();
+            var expRefleshToken  = DateTime.UtcNow.AddHours(2);
+
+            var tokenDTO =  new tokenDTO
+            {
+                Token = tokenString,
+                Expiration = exp,
+                RefleshToken= refleshToken, 
+                ExpirationRefleshToken= expRefleshToken
+
+            };
+
+            return tokenDTO;
             #endregion
         }
 
