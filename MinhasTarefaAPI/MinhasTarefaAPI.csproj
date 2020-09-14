@@ -5,6 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200907180748_BANCO-INICIAL.cs" />
+    <Compile Remove="Migrations\20200907180748_BANCO-INICIAL.Designer.cs" />
+    <Compile Remove="Migrations\20200910023237_token.cs" />
+    <Compile Remove="Migrations\20200910023237_token.Designer.cs" />
+    <Compile Remove="Migrations\20200911095111_addFktoken.cs" />
+    <Compile Remove="Migrations\20200911095111_addFktoken.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.7" />

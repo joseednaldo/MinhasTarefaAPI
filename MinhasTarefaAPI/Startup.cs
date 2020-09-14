@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,7 +39,14 @@ namespace MinhasTarefaAPI
                 op.SuppressModelStateInvalidFilter = true;
             });
 
-            services.AddMvc(option => option.EnableEndpointRouting = false)
+            //services.AddMvc(option => option.EnableEndpointRouting = false);
+           services.AddMvc(config => {
+               config.EnableEndpointRouting = false;
+               config.ReturnHttpNotAcceptable = true;  //406 fora do formato
+               config.InputFormatters.Add(new XmlSerializerInputFormatter(config));  // Suporta a entrada de dados no formato xml.
+               config.OutputFormatters.Add(new XmlSerializerOutputFormatter());     // retorno o xml na saida dos dados
+           })
+
             .AddNewtonsoftJson(options =>options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore)
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 

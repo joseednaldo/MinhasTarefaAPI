@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MinhasTarefaAPI.Models
 {
@@ -13,5 +10,10 @@ namespace MinhasTarefaAPI.Models
 
         [ForeignKey("UsuarioId")]
         public virtual ICollection<Tarefa> Tarefas { get; set; }
+
+
+        [ForeignKey("UsuarioId")]
+        public virtual ICollection<Token> Tokens { get; set; }
+
     }
 }

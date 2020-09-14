@@ -492,8 +492,123 @@ AULA 64		RENOVANDO JWT  PARTE 6
 
 
 #########################################################
-AULA 67		RENOVANDO JWT  PARTE 7
+AULA 67 / 68		RENOVANDO JWT  PARTE 7
 #########################################################
+Renvnado token
+Testando alterações...
+
+
+#########################################################
+AULA 	67 CONTENT NEGPCIATION  - ASP.NET CORE API
+#########################################################
+-Um mecanismo que usa do http para disponibilizar um
+recurso em reprsentações diferentes.
+--Baiscamente o nosso cliente ou seja o usuario da nossa API
+pode negociar como é que ele quer que agente represente nosso conteudo.
+--Torna a API mais flexível em sua utilização.
+
+
+ ::: CONTENT NEGOCIATION  :::
+
+NEGOCIAR IDIOMA. => ACCEPT-LANGUAGEM : EN
+NEGOCIAR CHARSET (PADRAO DE CODIFICACAO DE CARACTERES)  => ACCEPT -CHARSET: UTF-
+NEGOCIAR FORMATO ACEITO => ACCEPT:APLICATION/XML
+NEGOCIAR CODICAÇÃO DE CONTEUDO=> ACCEPT-ENCODING : GZIP
+
+NEGOCIAR CONTEÚDO DA ENTIDADE =>ACCEPT>APPLICATION/VND.USUARIO.SHORTVERSION + JSON
+ex: se queremos todos os dados de uma entidade ou apenas algumas informações dela e em que formato.
+
+
+
+###############################################################
+AULA 68 CONTENT NEGPCIATION  - FORMATO XML (NEGOCIAR FORMATO)
+###############################################################
+ex:
+Após o CEP, deve ser fornecido o tipo de retorno desejado, que deve ser "json", "xml", "piped" ou "querty
+4 formas para retorna os dados.
+EX:https://viacep.com.br/ws/03984140/json/   = retorno em json
+https://viacep.com.br/ws/03984140/xml/		 = retoro em xml
+
+
+
+=>CONFIGUAR O SETUP.CS PRA RECEBER FORMATO XML.
+//services.AddMvc(option => option.EnableEndpointRouting = false);
+   services.AddMvc(config => {
+	   config.EnableEndpointRouting = false;
+	   config.ReturnHttpNotAcceptable = true;  //406 fora do formato
+	   config.InputFormatters.Add(new XmlSerializerInputFormatter(config));  // Suporta a entrada de dados no formato xml.
+	   config.OutputFormatters.Add(new XmlSerializerOutputFormatter());     // retorno o xml na saida dos dados
+   })
+
+metodo login
+json:
+{
+    "email":"joseednaldo1983@gmail.com",
+    "senha":"Moncerra2011!"
+}
+Ex: de XML  metodo logar
+<UsuarioDTO>
+	<Email>joseednaldo1983@gmail.com</Email>
+	<Senha>Moncerra2011!</Senha>
+</UsuarioDTO>
+
+###############################################################
+AULA 69 IMPORTANTE SWAGGER
+###############################################################
+NOTA] Importante Swagger
+Atenção: Instale a biblioteca Swashbuckle.AspNetCore na versão 4.0.1, a mesma usada no curso, outras versões exigem configurações diferentes.
+
+###############################################################
+AULA 70 VERSIONAMENTO E SWAGGER
+###############################################################
+package:
+Microsoft.aspNetCore.Mvc.Core     versão  3.1.6
+
+
+
+
+
+
+
+
+
+
+
+
+C:\Users\adriano\Documents\Apowersoft\Apowersoft Online Screen Recorder
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

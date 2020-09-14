@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MinhasTarefaAPI.Migrations
 {
-    public partial class BANCOINICIAL : Migration
+    public partial class BancoInicial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -93,8 +93,8 @@ namespace MinhasTarefaAPI.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    ProviderKey = table.Column<string>(nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false)
                 },
@@ -138,8 +138,8 @@ namespace MinhasTarefaAPI.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
                     Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -176,6 +176,31 @@ namespace MinhasTarefaAPI.Migrations
                     table.PrimaryKey("PK_Tarefas", x => x.IdTarefaApi);
                     table.ForeignKey(
                         name: "FK_Tarefas_AspNetUsers_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Token",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    RefleshToken = table.Column<string>(nullable: true),
+                    UsuarioId = table.Column<string>(nullable: true),
+                    Utilizado = table.Column<bool>(nullable: false),
+                    ExpirationToken = table.Column<DateTime>(nullable: false),
+                    ExpirationRefleshToken = table.Column<DateTime>(nullable: false),
+                    Criado = table.Column<DateTime>(nullable: false),
+                    Atualizado = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Token", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Token_AspNetUsers_UsuarioId",
                         column: x => x.UsuarioId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -223,6 +248,11 @@ namespace MinhasTarefaAPI.Migrations
                 name: "IX_Tarefas_UsuarioId",
                 table: "Tarefas",
                 column: "UsuarioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Token_UsuarioId",
+                table: "Token",
+                column: "UsuarioId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -244,6 +274,9 @@ namespace MinhasTarefaAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tarefas");
+
+            migrationBuilder.DropTable(
+                name: "Token");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

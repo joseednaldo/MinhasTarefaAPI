@@ -50,33 +50,15 @@ namespace MinhasTarefaAPI.Controllers
 
                     /* não é mais necessario.
                      ele utiliza o CookieBuider pra guarda os dados do usuario logado.
-                     vamos usar agora o jtw que nao gaurda estado.
+                     vamos usar agora o jtw que nao guarda estado.
                     */
                     //_signInManager.SignInAsync(usuario, false);    
 
                     #endregion
+                    return CriarNovoToken(usuario);
 
-
-                    //Trabalhando com  token (JWT)
-                    var token = BuildToken(usuario);
-
-                    //salvar o token no banco
-                    var tokenModel = new Token()
-                    {
-
-
-                        RefleshToken = token.RefleshToken,
-                        ExpirationToken = token.Expiration,
-                        ExpirationRefleshToken = token.ExpirationRefleshToken,
-                        Usuario =usuario,
-                        Criado=DateTime.Now,
-                        Utilizado=false
-                    };
-                    _tokenRepositorie.Cadastrar(tokenModel);
-
-                    return Ok(token);
-
-                }else
+                }
+                else
                 {
                     return NotFound("Usuário não localizado!!!");
                 }
@@ -128,6 +110,27 @@ namespace MinhasTarefaAPI.Controllers
             #endregion
         }
 
+
+        [HttpPost("renovar")]
+        public ActionResult Renovar([FromBody]tokenDTO _tokenDTO)
+        {
+            var refleshTokneDB = _tokenRepositorie.Obter(_tokenDTO.RefleshToken);
+            if (refleshTokneDB == null)
+                return NotFound();
+
+            #region  Pegar Antigo  RefleshToken  =>  Atualizar ou Seja vamos Destiva-lo.
+            refleshTokneDB.Atualizado = DateTime.Now;
+            refleshTokneDB.Utilizado = true;
+            _tokenRepositorie.Atualizar(refleshTokneDB);
+            #endregion
+
+            #region Gerar um novo token e Salvar no banco de dados..
+            var usuario = _usuarioRepository.Obter(refleshTokneDB.UsuarioId);
+            return (CriarNovoToken(usuario));
+            #endregion
+
+        }
+
         [HttpPost()]//rota padrao
         public ActionResult Cadastrar([FromBody]UsuarioDTO usuarioDTO)
         {
@@ -160,6 +163,31 @@ namespace MinhasTarefaAPI.Controllers
                 return UnprocessableEntity(ModelState);
             }
         }
+
+
+        #region  Métodos privados
+        private ActionResult CriarNovoToken(ApplicationUser usuario)
+        {
+
+            //Trabalhando com  token (JWT)
+            var token = BuildToken(usuario);
+
+            //salvar o token no banco.
+            var tokenModel = new Token()
+            {
+                RefleshToken = token.RefleshToken,
+                ExpirationToken = token.Expiration,
+                ExpirationRefleshToken = token.ExpirationRefleshToken,
+                Usuario = usuario,
+                Criado = DateTime.Now,
+                Utilizado = false
+            };
+            _tokenRepositorie.Cadastrar(tokenModel);
+
+            return Ok(token);
+        }
+        #endregion
+
 
     }
 }

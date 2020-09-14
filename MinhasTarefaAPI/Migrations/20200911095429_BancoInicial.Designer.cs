@@ -9,8 +9,8 @@ using MinhasTarefaAPI.Database;
 namespace MinhasTarefaAPI.Migrations
 {
     [DbContext(typeof(MinhasTarefasContext))]
-    [Migration("20200910023237_token")]
-    partial class token
+    [Migration("20200911095429_BancoInicial")]
+    partial class BancoInicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -280,15 +280,15 @@ namespace MinhasTarefaAPI.Migrations
                     b.Property<string>("RefleshToken")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UsuarioId")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("Utilizado")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("usuarioId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("usuarioId");
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Token");
                 });
@@ -353,9 +353,9 @@ namespace MinhasTarefaAPI.Migrations
 
             modelBuilder.Entity("MinhasTarefaAPI.Models.Token", b =>
                 {
-                    b.HasOne("MinhasTarefaAPI.Models.ApplicationUser", "usuario")
-                        .WithMany()
-                        .HasForeignKey("usuarioId");
+                    b.HasOne("MinhasTarefaAPI.Models.ApplicationUser", "Usuario")
+                        .WithMany("Tokens")
+                        .HasForeignKey("UsuarioId");
                 });
 #pragma warning restore 612, 618
         }

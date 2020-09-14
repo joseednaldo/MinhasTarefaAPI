@@ -48,6 +48,9 @@ namespace MinhasTarefaAPI.Repositories
             }
         }
 
-       
+        public ApplicationUser Obter(string idUsuario)
+        {
+            return  _userManager.FindByIdAsync(idUsuario).Result;
+        }
     }
 }

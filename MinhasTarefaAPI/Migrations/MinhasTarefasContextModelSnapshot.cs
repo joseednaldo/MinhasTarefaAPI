@@ -278,15 +278,15 @@ namespace MinhasTarefaAPI.Migrations
                     b.Property<string>("RefleshToken")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UsuarioId")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("Utilizado")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("usuarioId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("usuarioId");
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Token");
                 });
@@ -351,9 +351,9 @@ namespace MinhasTarefaAPI.Migrations
 
             modelBuilder.Entity("MinhasTarefaAPI.Models.Token", b =>
                 {
-                    b.HasOne("MinhasTarefaAPI.Models.ApplicationUser", "usuario")
-                        .WithMany()
-                        .HasForeignKey("usuarioId");
+                    b.HasOne("MinhasTarefaAPI.Models.ApplicationUser", "Usuario")
+                        .WithMany("Tokens")
+                        .HasForeignKey("UsuarioId");
                 });
 #pragma warning restore 612, 618
         }
