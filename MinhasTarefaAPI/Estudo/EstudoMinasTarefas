@@ -559,13 +559,15 @@ NOTA] Importante Swagger
 Atenção: Instale a biblioteca Swashbuckle.AspNetCore na versão 4.0.1, a mesma usada no curso, outras versões exigem configurações diferentes.
 
 ###############################################################
-AULA 70 VERSIONAMENTO E SWAGGER
+AULA 70 VERSIONAMENTO E SWAGGER PARTE 1
 ###############################################################
 package:
-Microsoft.aspNetCore.Mvc.Core     versão  3.1.6
+Microsoft.AspNetCore.Mvc.Versioning     versão  3.1.6
+Swashbuckle.AspNetCore na versão 4.0.1
 
-
-
+###############################################################
+AULA 71 VERSIONAMENTO E SWAGGER PARTE 2
+###############################################################
 
 
 

@@ -11,14 +11,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
-using MinhasTarefaAPI.Models;
-using MinhasTarefaAPI.Repositories.Contracts;
+using MinhasTarefaAPI.V1.Models;
+using MinhasTarefaAPI.V1.Repositories.Contracts;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
-namespace MinhasTarefaAPI.Controllers
+namespace MinhasTarefaAPI.V1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class usuarioController : ControllerBase
     {
         private readonly ITokenRepositorie _tokenRepositorie;

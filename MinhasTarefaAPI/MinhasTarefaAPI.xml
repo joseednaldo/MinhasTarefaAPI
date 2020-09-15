@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MinhasTarefaAPI</name>
+    </assembly>
+    <members>
+        <member name="P:MinhasTarefaAPI.V1.Models.Tarefa.IdTarefaApi">
+             <summary>
+             CADA APP VAI TER SEU PROPRIO BANCO DE DADOS EM CADA CELULAR
+             VAMOS USAR API PARA ATUALIZAR NO BANCO NA NUVEM E VICE-VERSA.
+             </summary>
+            
+        </member>
+        <member name="M:MinhasTarefaAPI.V1.Repositories.Contracts.ITarefaRepository.Restauracao(MinhasTarefaAPI.V1.Models.ApplicationUser,System.DateTime)">
+             <summary>
+             se data nao enviar no parametro eu pego tudo do banco e faço bkp.
+            se tiver a data os pegamos todos os registros a parti dessa data...
+             </summary>
+             <param name="dataUltimaSocronizacao"></param>
+             <returns>Lista de tarefas</returns>
+        </member>
+    </members>
+</doc>

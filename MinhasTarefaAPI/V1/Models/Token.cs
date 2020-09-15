@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MinhasTarefaAPI.Models
+namespace MinhasTarefaAPI.V1.Models
 {
     public  class Token
     {

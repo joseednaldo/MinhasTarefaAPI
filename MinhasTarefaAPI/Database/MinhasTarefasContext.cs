@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using MinhasTarefaAPI.Models;
+using MinhasTarefaAPI.V1.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

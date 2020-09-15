@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-using MinhasTarefaAPI.Models;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Identity;
+using MinhasTarefaAPI.V1.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,8 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MinhasTarefaAPI.Repositories
+namespace MinhasTarefaAPI.V1.Repositories
 {
+    
     public class UsuarioRepository : Contracts.IUsuarioRepository
     {
 

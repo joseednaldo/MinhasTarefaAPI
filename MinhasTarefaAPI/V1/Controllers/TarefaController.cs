@@ -6,13 +6,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using MinhasTarefaAPI.Models;
-using MinhasTarefaAPI.Repositories.Contracts;
+using MinhasTarefaAPI.V1.Models;
+using MinhasTarefaAPI.V1.Repositories.Contracts;
 
 namespace MinhasTarefaAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class TarefaController : ControllerBase
     {
         private readonly ITarefaRepository _tarefaRepository;

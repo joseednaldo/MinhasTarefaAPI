@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MinhasTarefaAPI.Models
+namespace MinhasTarefaAPI.V1.Models
 {
     public class UsuarioDTO
     {

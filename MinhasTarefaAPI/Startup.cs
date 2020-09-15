@@ -11,12 +11,19 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using MinhasTarefaAPI.Database;
-using MinhasTarefaAPI.Models;
+using MinhasTarefaAPI.V1.Models;
 using MinhasTarefaAPI.Repositories;
-using MinhasTarefaAPI.Repositories.Contracts;
+using MinhasTarefaAPI.V1.Repositories.Contracts;
 using Newtonsoft.Json;
 using System.Text;
 using System.Threading.Tasks;
+using MinhasTarefaAPI.V1.Repositories;
+using System.Linq;
+using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.PlatformAbstractions;
+using System.IO;
+using MinhasTarefaAPI.v1.Helpers.Swagger;
+using MinhasTarefaAPI.V1.Helpers.Swagger;
 
 namespace MinhasTarefaAPI
 {
@@ -40,16 +47,67 @@ namespace MinhasTarefaAPI
             });
 
             //services.AddMvc(option => option.EnableEndpointRouting = false);
-           services.AddMvc(config => {
-               config.EnableEndpointRouting = false;
-               config.ReturnHttpNotAcceptable = true;  //406 fora do formato
-               config.InputFormatters.Add(new XmlSerializerInputFormatter(config));  // Suporta a entrada de dados no formato xml.
-               config.OutputFormatters.Add(new XmlSerializerOutputFormatter());     // retorno o xml na saida dos dados
-           })
+            services.AddMvc(config => {
+                config.EnableEndpointRouting = false;
+                config.ReturnHttpNotAcceptable = true;  //406 fora do formato
+                config.InputFormatters.Add(new XmlSerializerInputFormatter(config));  // Suporta a entrada de dados no formato xml.
+                config.OutputFormatters.Add(new XmlSerializerOutputFormatter());     // retorno o xml na saida dos dados
+            })
+
+
+
 
             .AddNewtonsoftJson(options =>options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore)
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
+
+
+            services.AddApiVersioning(cfg =>
+            {
+                cfg.ReportApiVersions = true;  // essa opção vai mostra no HEADERS as versiões suportada ex:(spi-suported  = 1.0 ,2.0)  //// ativar a disponibilização do versionamento da API
+                cfg.AssumeDefaultVersionWhenUnspecified = true; // parâmetro complementar ao ".DefaultApiVersion"
+                cfg.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0); // versão default - padrão ou sugerida.
+
+            });
+
+
+            services.AddSwaggerGen(cfg => {
+
+                cfg.ResolveConflictingActions(apiDescription => apiDescription.First()); // para resolver conflitos de versões da API no Swagger, com mesmo nome.
+
+                cfg.SwaggerDoc("v1.0", new Swashbuckle.AspNetCore.Swagger.Info()
+                {
+                    Version = "v1.0",
+                    Title = "MinhasTarefas API - v1.0"
+
+                });
+
+
+                var CaminhoProjeto = PlatformServices.Default.Application.ApplicationBasePath;   //recupera o caminho do projeto...
+                var NomeProjeto = $"{PlatformServices.Default.Application.ApplicationName}.xml"; //recupera o nome do projeto...
+                var CaminhoArquivoXMLComentario = Path.Combine(CaminhoProjeto, NomeProjeto);
+                cfg.IncludeXmlComments(CaminhoArquivoXMLComentario);
+
+
+                cfg.DocInclusionPredicate((docName, apiDesc) =>
+                {
+                    var actioonApiVersionModel = apiDesc.ActionDescriptor?.GetApiVersion();
+
+                    if (actioonApiVersionModel == null)
+                    {
+                        return true;
+                    }
+
+                    if (actioonApiVersionModel.DeclaredApiVersions.Any())
+                    {
+                        return actioonApiVersionModel.DeclaredApiVersions.Any(v => $"v{v.ToString()}" == docName);
+                    }
+
+                    return actioonApiVersionModel.ImplementedApiVersions.Any(v => $"v{v.ToString()}" == docName);
+                });
+
+                cfg.OperationFilter<ApiVersionOperationFilter>();
+            });
             #endregion
 
 
@@ -146,6 +204,17 @@ namespace MinhasTarefaAPI
             });
             // app.UseMvc();
 
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "MimicAPI");
+                c.RoutePrefix = string.Empty;
+            });
 
 
         }

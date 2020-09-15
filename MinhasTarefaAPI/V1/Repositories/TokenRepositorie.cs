@@ -1,6 +1,6 @@
 ﻿using MinhasTarefaAPI.Database;
-using MinhasTarefaAPI.Models;
-using MinhasTarefaAPI.Repositories.Contracts;
+using MinhasTarefaAPI.V1.Models;
+using MinhasTarefaAPI.V1.Repositories.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
