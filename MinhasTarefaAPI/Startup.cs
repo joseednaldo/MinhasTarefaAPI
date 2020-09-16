@@ -71,11 +71,14 @@ namespace MinhasTarefaAPI
             });
 
 
+
+
+
             services.AddSwaggerGen(cfg => {
 
                 cfg.ResolveConflictingActions(apiDescription => apiDescription.First()); // para resolver conflitos de versões da API no Swagger, com mesmo nome.
 
-                cfg.SwaggerDoc("v1.0", new Swashbuckle.AspNetCore.Swagger.Info()
+                cfg.SwaggerDoc("v1.0", new OpenApiInfo
                 {
                     Version = "v1.0",
                     Title = "MinhasTarefas API - v1.0"
@@ -88,25 +91,24 @@ namespace MinhasTarefaAPI
                 var CaminhoArquivoXMLComentario = Path.Combine(CaminhoProjeto, NomeProjeto);
                 cfg.IncludeXmlComments(CaminhoArquivoXMLComentario);
 
+                //cfg.DocInclusionPredicate((docName, apiDesc) =>
+                //{
+                //    var actioonApiVersionModel = apiDesc.ActionDescriptor?.GetApiVersion();
 
-                cfg.DocInclusionPredicate((docName, apiDesc) =>
-                {
-                    var actioonApiVersionModel = apiDesc.ActionDescriptor?.GetApiVersion();
+                //    if (actioonApiVersionModel == null)
+                //    {
+                //        return true;
+                //    }
 
-                    if (actioonApiVersionModel == null)
-                    {
-                        return true;
-                    }
+                //    if (actioonApiVersionModel.DeclaredApiVersions.Any())
+                //    {
+                //        return actioonApiVersionModel.DeclaredApiVersions.Any(v => $"v{v.ToString()}" == docName);
+                //    }
 
-                    if (actioonApiVersionModel.DeclaredApiVersions.Any())
-                    {
-                        return actioonApiVersionModel.DeclaredApiVersions.Any(v => $"v{v.ToString()}" == docName);
-                    }
+                //    return actioonApiVersionModel.ImplementedApiVersions.Any(v => $"v{v.ToString()}" == docName);
+                //});
 
-                    return actioonApiVersionModel.ImplementedApiVersions.Any(v => $"v{v.ToString()}" == docName);
-                });
-
-                cfg.OperationFilter<ApiVersionOperationFilter>();
+                //cfg.OperationFilter<ApiVersionOperationFilter>();
             });
             #endregion
 
@@ -202,7 +204,11 @@ namespace MinhasTarefaAPI
             {
                 endpoints.MapControllers();
             });
-            // app.UseMvc();
+            
+            
+            app.UseMvc();
+
+
 
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
@@ -212,7 +218,7 @@ namespace MinhasTarefaAPI
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "MimicAPI");
+                c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "MinhaTarefa");
                 c.RoutePrefix = string.Empty;
             });
 
